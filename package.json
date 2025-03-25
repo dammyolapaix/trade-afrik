@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier src/ --write"
+    "format": "prettier src/ --write",
+    "migration:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit generate && cross-env DB_MIGRATING=true drizzle-kit migrate",
+    "db:seed": "cross-env DB_SEEDING=true pnpx tsx src/db/seeder.ts",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",
@@ -16,9 +20,13 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
     "dotenv-expand": "^12.0.1",
+    "drizzle-kit": "^0.30.5",
+    "drizzle-orm": "^0.41.0",
+    "drizzle-zod": "^0.7.0",
     "jiti": "^2.4.2",
     "lucide-react": "^0.483.0",
     "next": "15.2.4",
+    "postgres": "^3.4.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.0.2",
