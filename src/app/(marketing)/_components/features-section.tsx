@@ -1,66 +1,67 @@
-import { BarChart2, Globe, Package, ShieldCheck, Truck } from "lucide-react";
+import { BarChart2, Globe, Package, ShieldCheck, Truck } from 'lucide-react'
+
 import {
   Card,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+} from '@/components/ui/card'
 
 const features = [
   {
     icon: Globe,
-    title: "Global Reach",
+    title: 'Global Reach',
     description:
-      "Connect with buyers from around the world interested in authentic African products.",
+      'Connect with buyers from around the world interested in authentic African products.',
   },
   {
     icon: Truck,
-    title: "Fulfillment Support",
+    title: 'Fulfillment Support',
     description:
-      "We handle shipping logistics, customs, and delivery to make selling internationally easy.",
+      'We handle shipping logistics, customs, and delivery to make selling internationally easy.',
   },
   {
     icon: Package,
-    title: "Product Marketing",
+    title: 'Product Marketing',
     description:
-      "Get your products in front of the right buyers with our targeted marketing tools.",
+      'Get your products in front of the right buyers with our targeted marketing tools.',
   },
   {
     icon: BarChart2,
-    title: "Analytics Dashboard",
+    title: 'Analytics Dashboard',
     description:
-      "Track performance, understand your audience, and optimize your listings with data-driven insights.",
+      'Track performance, understand your audience, and optimize your listings with data-driven insights.',
   },
   {
     icon: Package,
-    title: "Keep 80% Revenue",
+    title: 'Keep 80% Revenue',
     description:
-      "Enjoy one of the most competitive commission structures in the industry.",
+      'Enjoy one of the most competitive commission structures in the industry.',
   },
   {
     icon: ShieldCheck,
-    title: "Secure Payments",
+    title: 'Secure Payments',
     description:
-      "Receive payments securely and on time with our trusted payment processing system.",
+      'Receive payments securely and on time with our trusted payment processing system.',
   },
-];
+]
 
 export function FeaturesSection() {
   return (
     <section
       id="features"
-      className="w-full py-12 md:py-24 lg:py-32 bg-muted/40"
+      className="bg-muted/40 w-full py-12 md:py-24 lg:py-32"
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">
-            <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
+            <div className="bg-muted inline-block rounded-lg px-3 py-1 text-sm">
               Features
             </div>
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
               Everything You Need to Succeed
             </h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="text-muted-foreground max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Our platform provides all the tools and support you need to
               showcase your products to a global audience.
             </p>
@@ -70,7 +71,7 @@ export function FeaturesSection() {
           {features.map((feature) => (
             <Card key={feature.title}>
               <CardHeader>
-                <feature.icon className="h-10 w-10 text-primary" />
+                <feature.icon className="text-primary h-10 w-10" />
                 <CardTitle>{feature.title}</CardTitle>
                 <CardDescription>{feature.description}</CardDescription>
               </CardHeader>
@@ -79,5 +80,5 @@ export function FeaturesSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

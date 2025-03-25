@@ -1,10 +1,10 @@
-import Footer from "./_components/footer";
-import Header from "./_components/header";
+import Footer from './_components/footer'
+import Header from './_components/header'
 
 export default function MarketingLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <>
@@ -12,5 +12,5 @@ export default function MarketingLayout({
       {children}
       <Footer />
     </>
-  );
+  )
 }

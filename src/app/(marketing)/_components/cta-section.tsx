@@ -1,6 +1,8 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from 'next/link'
+
+import { ArrowRight } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 
 export function CTASection() {
   return (
@@ -11,7 +13,7 @@ export function CTASection() {
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
               Ready to Take Your Business Global?
             </h2>
-            <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="text-muted-foreground max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Join thousands of African sellers already growing their businesses
               on our platform.
             </p>
@@ -29,5 +31,5 @@ export function CTASection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

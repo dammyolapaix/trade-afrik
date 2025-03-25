@@ -1,7 +1,9 @@
-import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Image from 'next/image'
+import Link from 'next/link'
+
+import { ArrowRight, CheckCircle } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 
 export function HeroSection() {
   return (
@@ -13,7 +15,7 @@ export function HeroSection() {
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                 Sell African Indigenous Products to the World
               </h1>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl">
+              <p className="text-muted-foreground max-w-[600px] md:text-xl">
                 Connect with global buyers, showcase your authentic products,
                 and grow your business with our specialized B2B marketplace.
               </p>
@@ -30,15 +32,15 @@ export function HeroSection() {
             </div>
             <div className="flex items-center space-x-4 text-sm">
               <div className="flex items-center space-x-1">
-                <CheckCircle className="h-4 w-4 text-primary" />
+                <CheckCircle className="text-primary h-4 w-4" />
                 <span>Keep 80% of Revenue</span>
               </div>
               <div className="flex items-center space-x-1">
-                <CheckCircle className="h-4 w-4 text-primary" />
+                <CheckCircle className="text-primary h-4 w-4" />
                 <span>Global Shipping</span>
               </div>
               <div className="flex items-center space-x-1">
-                <CheckCircle className="h-4 w-4 text-primary" />
+                <CheckCircle className="text-primary h-4 w-4" />
                 <span>Marketing Support</span>
               </div>
             </div>
@@ -58,5 +60,5 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }
