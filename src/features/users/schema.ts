@@ -7,13 +7,14 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core'
 
-import { oAuthProviderEnum } from '@/db/enums'
+import { oAuthProviderEnum, userRoleEnum } from '@/db/enums'
 import { timestamps } from '@/db/helper'
 
 const users = pgTable('users', {
   id: uuid().primaryKey().defaultRandom().notNull(),
   email: varchar({ length: 320 }).notNull().unique(),
   emailVerified: timestamp({ mode: 'string' }),
+  role: userRoleEnum().notNull(),
   password: varchar({ length: 256 }),
   salt: text(),
   ...timestamps,
