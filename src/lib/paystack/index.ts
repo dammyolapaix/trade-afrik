@@ -9,6 +9,7 @@ import {
   InitializeTransactionResponse,
   ListBanks,
   ListBanksQuery,
+  ListSubAccounts,
   MakePaystackRequest,
   PaystackErrorResponse,
   PaystackResponse,
@@ -104,6 +105,16 @@ class Paystack {
       endPoint: '/subaccount',
       method: 'POST',
       body,
+    })
+
+  listSubAccounts = async () =>
+    await this.makePaystackRequest<
+      undefined,
+      'Subaccounts retrieved',
+      ListSubAccounts
+    >({
+      endPoint: '/subaccount',
+      method: 'GET',
     })
 }
 

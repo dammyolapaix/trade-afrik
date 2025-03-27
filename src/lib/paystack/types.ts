@@ -132,3 +132,20 @@ export type CreateSubAccountResponse = {
   createdAt: string
   updatedAt: string
 }
+
+export type ListSubAccounts = {
+  id: number
+  subaccount_code: string
+  business_name: string
+  description: string | null
+  primary_contact_name: string | null
+  primary_contact_email: string | null
+  primary_contact_phone: string | null
+  metadata: Record<string, unknown> | null
+  percentage_charge: number
+  settlement_bank: string
+  bank_id: number
+  account_number: string
+  currency: PaystackCurrency
+  active: 0 | 1 // Paystack uses 0/1 for boolean in this response
+}
