@@ -27,7 +27,8 @@ class Paystack {
     request: MakePaystackRequest<Body>
   ): Promise<PaystackResponse<ResponseMessage, ResponseData>> => {
     try {
-      const { method, endPoint } = request
+      const { method } = request
+      let endPoint = request.endPoint
 
       const fetchOptions: RequestInit = {
         method,
@@ -40,6 +41,11 @@ class Paystack {
       // If the method is POST, include the body in the request
       if (method === 'POST' && request.body) {
         fetchOptions.body = JSON.stringify(request.body)
+      }
+
+      if (method === 'GET' && request.query) {
+        const queryParams = new URLSearchParams(request.query)
+        endPoint += `?${queryParams.toString()}`
       }
 
       const response = await fetch(`${this.BASE_URL}${endPoint}`, fetchOptions)
