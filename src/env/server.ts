@@ -20,6 +20,7 @@ export const env = createEnv({
     OAUTH_REDIRECT_URL_BASE: z.string().url(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    PAYSTACK_SECRET_KEY: z.string(),
     DB_MIGRATING: stringBoolean,
     DB_SEEDING: stringBoolean,
   },
