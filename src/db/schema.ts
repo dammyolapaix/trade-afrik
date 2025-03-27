@@ -1,4 +1,4 @@
-export { oAuthProviderEnum } from '@/db/enums'
+export { oAuthProviderEnum, userRoleEnum } from '@/db/enums'
 
 export {
   profiles,
