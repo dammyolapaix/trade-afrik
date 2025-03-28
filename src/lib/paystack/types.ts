@@ -104,7 +104,7 @@ export type ListBanks = {
   id: number
   createdAt: string
   updatedAt: string
-}
+}[]
 
 export type ListBanksQuery = {
   country?: PaystackCountry
