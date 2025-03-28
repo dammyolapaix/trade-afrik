@@ -51,6 +51,13 @@ export const createSubAccountAction = validatedActionWithUser(
       }
     }
 
+    if (authUserStore.paystackSubAccountId) {
+      return {
+        form: state,
+        error: 'You already have a payment account',
+      }
+    }
+
     const paystackSubAccountResponse = await paystack.createSubAccount({
       ...state,
       business_name: authUserStore.name,
