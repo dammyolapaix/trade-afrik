@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import paystack from '@/lib/paystack'
 import { ListBanks } from '@/lib/paystack/types'
 
+import AuthOnboardingLayout from '../../_components/auth-onboarding-layout'
 import PaymentAccountForm from '../_components/payment-account-form'
 
 export default async function PaymentAccountPage() {
@@ -16,7 +17,9 @@ export default async function PaymentAccountPage() {
 
   return (
     <Suspense fallback={<>Loading...</>}>
-      {banks && <PaymentAccountForm banks={banks} />}
+      <AuthOnboardingLayout>
+        {banks && <PaymentAccountForm banks={banks} />}
+      </AuthOnboardingLayout>
     </Suspense>
   )
 }
