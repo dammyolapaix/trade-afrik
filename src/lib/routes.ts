@@ -10,3 +10,8 @@ export const ONBOARDING_CREATE_STORE_ROUTE = '/onboarding/create-store' as const
 
 export const ONBOARDING_PAYMENT_ACCOUNT_ROUTE =
   '/onboarding/payment-account' as const
+
+export const DASHBOARD_PRODUCTS_ROUTE = `${DASHBOARD_ROUTE}/products` as const
+
+export const DASHBOARD_PRODUCTS_CREATE_ROUTE =
+  `${DASHBOARD_PRODUCTS_ROUTE}/create` as const

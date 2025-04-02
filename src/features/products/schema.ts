@@ -22,6 +22,9 @@ export const products = pgTable('products', {
     .references(() => users.id, { onDelete: 'cascade' }),
   name: varchar({ length: 256 }).notNull(),
   description: text(),
+  subCategoryId: uuid()
+    .notNull()
+    .references(() => subCategories.id, { onDelete: 'cascade' }),
   publishedAt: timestamp({ mode: 'string' }),
   ...timestamps,
 })
