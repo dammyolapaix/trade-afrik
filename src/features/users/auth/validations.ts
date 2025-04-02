@@ -37,6 +37,7 @@ export const registerSchema = z.intersection(authSchema, profileSchema)
 export const oauthSchema = z.intersection(
   z.object({
     provider: z.enum(OAUTH_PROVIDERS),
+    authType: z.enum(['register', 'login']),
   }),
   authSchema.pick({ role: true }).optional()
 )

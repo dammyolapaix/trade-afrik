@@ -17,7 +17,8 @@ const COOKIE_EXPIRATION_SECONDS = 60 * 10
 
 type StateData = {
   random: string
-  role?: string
+  authType: 'register' | 'login'
+  role?: Exclude<UserRole, 'admin'>
 }
 
 export class OAuthClient<T> {
@@ -73,8 +74,11 @@ export class OAuthClient<T> {
     return new URL(this.provider, env.OAUTH_REDIRECT_URL_BASE)
   }
 
-  createAuthUrl = async (role?: Exclude<UserRole, 'admin'>) => {
-    const state = await createState(role)
+  createAuthUrl = async ({ authType, role }: Omit<StateData, 'random'>) => {
+    const state = await createState({
+      authType,
+      role,
+    })
 
     const url = new URL(this.urls.auth)
     url.searchParams.set('client_id', this.clientId)
@@ -171,11 +175,12 @@ class InvalidStateError extends Error {
 //   }
 // }
 
-const createState = async (role?: string) => {
+const createState = async ({ authType, role }: Omit<StateData, 'random'>) => {
   const cookieStore = await cookies()
 
   const stateData: StateData = {
     random: crypto.randomBytes(32).toString('hex'),
+    authType,
     role,
   }
 

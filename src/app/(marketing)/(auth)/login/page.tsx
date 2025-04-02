@@ -1,16 +1,16 @@
 import AuthOnboardingLayout from '../../_components/auth-onboarding-layout'
-import { RegisterForm } from '../_components/register-form'
+import { LoginForm } from '../_components/login-form'
 
 type Props = {
   searchParams: Promise<{ oauthError?: string }>
 }
 
-export default async function RegisterPage({ searchParams }: Props) {
+export default async function LoginPage({ searchParams }: Props) {
   const { oauthError } = await searchParams
 
   return (
     <AuthOnboardingLayout>
-      <RegisterForm oauthError={oauthError} />
+      <LoginForm oauthError={oauthError} />
     </AuthOnboardingLayout>
   )
 }

@@ -81,7 +81,7 @@ export const retrieveOrCreateOAuthUser = async ({
       if (!user || !profile) throw new Error(INTERNAL_ERROR_MESSAGE)
     }
 
-    const [userOAuthAccount] = await tx
+    await tx
       .insert(userOAuthAccounts)
       .values({
         provider,
@@ -90,8 +90,6 @@ export const retrieveOrCreateOAuthUser = async ({
       })
       .onConflictDoNothing()
       .returning()
-
-    if (!userOAuthAccount) throw new Error(INTERNAL_ERROR_MESSAGE)
 
     return user
   })

@@ -85,7 +85,10 @@ export const oAuthAction = validatedAction(
   async (state: z.infer<typeof oauthSchema>) => {
     const oAuthClient = getOAuthClient(state.provider)
 
-    const redirectUrl = await oAuthClient.createAuthUrl(state.role)
+    const redirectUrl = await oAuthClient.createAuthUrl({
+      authType: state.authType,
+      role: state.role,
+    })
 
     redirect(redirectUrl)
   }

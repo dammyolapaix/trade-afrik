@@ -6,7 +6,13 @@ import { oauthSchema } from '@/features/users/auth/validations'
 import { retrieveOrCreateOAuthUser } from '@/features/users/services'
 import { OAuthProvider } from '@/features/users/types'
 import { createUserSession } from '@/lib/auth/sessions'
-import { HOME_ROUTE, LOGIN_ROUTE, REGISTER_ROUTE } from '@/lib/routes'
+import {
+  DASHBOARD_ROUTE,
+  HOME_ROUTE,
+  LOGIN_ROUTE,
+  ONBOARDING_CREATE_STORE_ROUTE,
+  REGISTER_ROUTE,
+} from '@/lib/routes'
 
 type Params = {
   params: Promise<{ provider: OAuthProvider }>
@@ -40,6 +46,7 @@ export async function GET(request: NextRequest, { params }: Params) {
   const validatedData = oauthSchema.parse({
     provider,
     role: stateData.role,
+    authType: stateData.authType,
   })
 
   const oAuthClient = getOAuthClient(validatedData.provider)
@@ -62,5 +69,15 @@ export async function GET(request: NextRequest, { params }: Params) {
     )
   }
 
-  redirect(HOME_ROUTE)
+  let redirectUrl: string = HOME_ROUTE
+
+  if (stateData.authType === 'register' && stateData.role === 'seller') {
+    redirectUrl = ONBOARDING_CREATE_STORE_ROUTE
+  } else if (stateData.authType === 'login' && stateData.role === 'seller') {
+    redirectUrl = DASHBOARD_ROUTE
+  } else {
+    redirectUrl = HOME_ROUTE
+  }
+
+  redirect(redirectUrl)
 }
