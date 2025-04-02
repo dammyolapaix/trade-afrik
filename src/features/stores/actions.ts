@@ -6,6 +6,7 @@ import { z } from 'zod'
 
 import { validatedActionWithUser } from '@/lib/auth/middlewares'
 import paystack from '@/lib/paystack'
+import { DASHBOARD_ROUTE, ONBOARDING_PAYMENT_ACCOUNT_ROUTE } from '@/lib/routes'
 import { slugify } from '@/lib/utils'
 
 import { createStore, retrieveStore, updateStore } from './services'
@@ -35,7 +36,7 @@ export const createStoreAction = validatedActionWithUser(
         error: 'Something went wrong',
       }
 
-    redirect('/')
+    redirect(ONBOARDING_PAYMENT_ACCOUNT_ROUTE)
   }
 )
 
@@ -81,6 +82,6 @@ export const createSubAccountAction = validatedActionWithUser(
         error: 'Something went wrong',
       }
 
-    redirect('/')
+    redirect(DASHBOARD_ROUTE)
   }
 )
