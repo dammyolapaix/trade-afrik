@@ -8,7 +8,7 @@ import { useFormStatus } from 'react-dom'
 import { Button } from './ui/button'
 
 type Props = {
-  cta: string
+  cta: string | React.ReactNode
   className?: string
   size?: 'default' | 'sm' | 'lg' | 'icon' | null
   disabled?: boolean
