@@ -26,21 +26,24 @@ export const createProduct = async (product: InsertProduct) => {
 }
 
 export const createProductVariant = async (variant: InsertProductVariant) => {
-  const [newVariant] = await db
-    .insert(productVariants)
-    .values(variant)
-    .returning()
-  return newVariant
-}
+  return db.transaction(async (tx) => {
+    const [newVariant] = await tx
+      .insert(productVariants)
+      .values(variant)
+      .returning()
 
-export const createProductVariantImage = async (
-  image: InsertProductVariantImage
-) => {
-  const [newImage] = await db
-    .insert(productVariantImages)
-    .values(image)
-    .returning()
-  return newImage
+    const productVariantImagesData: InsertProductVariantImage[] =
+      variant.images.map((imageUrl) => {
+        return { imageUrl, productVariantId: newVariant.id }
+      })
+
+    await tx
+      .insert(productVariantImages)
+      .values(productVariantImagesData)
+      .returning()
+
+    return newVariant
+  })
 }
 
 export const createProductSubCategory = async (

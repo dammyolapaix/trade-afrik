@@ -43,13 +43,21 @@ export const productVariantSchema = z
         message: 'The sale price is required and it must be a number',
       })
       .transform((val) => val * 100),
-    // images: z
-    //   .array(
-    //     z.object({
-    //       imageUrl: z.string().url('Please provide a valid image URL'),
-    //     })
-    //   )
-    //   .min(1, 'At least one image is required'),
+    images: z
+      .array(z.instanceof(File))
+      .refine((files) => files.length > 0, {
+        message: 'At least one image is required',
+      })
+      .refine(
+        (files) =>
+          files.every((file) =>
+            ['image/jpeg', 'image/png'].includes(file.type)
+          ),
+        { message: 'Only JPEG and PNG images are allowed' }
+      )
+      .refine((files) => files.every((file) => file.size < 5 * 1024 * 1024), {
+        message: 'Each image must be smaller than 5MB',
+      }),
   })
   .superRefine((data, ctx) => {
     if (data.price <= data.salePrice) {

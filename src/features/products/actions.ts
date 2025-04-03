@@ -6,6 +6,7 @@ import { z } from 'zod'
 
 import { validatedActionWithUser } from '@/lib/auth/middlewares'
 import { DASHBOARD_PRODUCTS_ROUTE } from '@/lib/routes'
+import s3 from '@/lib/s3'
 
 import {
   createProduct,
@@ -193,7 +194,29 @@ export const createProductVariantAction = validatedActionWithUser(
   productVariantSchema,
   ['seller'],
   async (state: z.infer<typeof productVariantSchema>) => {
-    const productVariant = await createProductVariant(state)
+    const images: string[] = []
+
+    for (const image of state.images) {
+      const buffer = await image.arrayBuffer()
+      const s3Response = await s3.put({
+        Key: image.name,
+        Body: buffer,
+        ContentType: image.type,
+      })
+
+      if (!s3Response) {
+        return {
+          form: state,
+          error: 'Failed to upload image',
+        }
+      }
+
+      const imageUrl = `${image.name}`
+
+      images.push(imageUrl)
+    }
+
+    const productVariant = await createProductVariant({ ...state, images })
 
     if (!productVariant) {
       return {

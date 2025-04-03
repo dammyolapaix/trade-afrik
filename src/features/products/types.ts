@@ -12,7 +12,9 @@ export type Product = typeof products.$inferSelect
 export type InsertProduct = typeof products.$inferInsert
 
 export type ProductVariant = typeof productVariants.$inferSelect
-export type InsertProductVariant = typeof productVariants.$inferInsert
+export type InsertProductVariant = typeof productVariants.$inferInsert & {
+  images: string[]
+}
 
 export type ProductVariantImage = typeof productVariantImages.$inferSelect
 export type InsertProductVariantImage = typeof productVariantImages.$inferInsert
