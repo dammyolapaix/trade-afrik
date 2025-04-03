@@ -9,6 +9,7 @@ import { DASHBOARD_PRODUCTS_ROUTE } from '@/lib/routes'
 
 import {
   createProduct,
+  createProductVariant,
   deleteProduct,
   publishProduct,
   retrieveProduct,
@@ -17,6 +18,7 @@ import {
 } from './services'
 import {
   productSchema,
+  productVariantSchema,
   publishProductSchema,
   updateProductSchema,
 } from './validations'
@@ -184,5 +186,22 @@ export const unpublishProductAction = validatedActionWithUser(
     }
 
     redirect(DASHBOARD_PRODUCTS_ROUTE)
+  }
+)
+
+export const createProductVariantAction = validatedActionWithUser(
+  productVariantSchema,
+  ['seller'],
+  async (state: z.infer<typeof productVariantSchema>) => {
+    const productVariant = await createProductVariant(state)
+
+    if (!productVariant) {
+      return {
+        form: state,
+        error: 'Failed to create product variant',
+      }
+    }
+
+    return { success: 'Product variant created successfully' }
   }
 )

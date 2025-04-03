@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { eq, or } from 'drizzle-orm'
+import { and, eq, or } from 'drizzle-orm'
 
 import { db } from '@/db'
 import {
@@ -57,7 +57,7 @@ export const retrieveProduct = async (
   query: RetrieveProduct
 ): Promise<Product | undefined> => {
   return await db.query.products.findFirst({
-    where: or(
+    where: and(
       query.id ? eq(products.id, query.id) : undefined,
       query.storeId ? eq(products.storeId, query.storeId) : undefined,
       query.userId ? eq(products.userId, query.userId) : undefined

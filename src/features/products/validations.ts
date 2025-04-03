@@ -12,35 +12,58 @@ export const productSchema = z.object({
     .uuid({ message: 'Invalid sub category' }),
 })
 
-export const productVariantSchema = z.object({
-  sku: z
-    .string({ required_error: 'SKU is required' })
-    .min(3, 'SKU must be at least 3 characters'),
-  quantity: z
-    .number({ required_error: 'Quantity is required' })
-    .int()
-    .min(0, 'Quantity must be a positive number'),
-  size: z.enum(PRODUCT_VARIANT_SIZES, {
-    required_error: 'Size is required',
-  }),
-  color: z.enum(PRODUCT_VARIANT_COLORS, {
-    required_error: 'Color is required',
-  }),
-  weight: z.number().int().min(0, 'Weight must be a positive number'),
-  price: z.number().int().min(1, 'Price must be at least 1'),
-  salePrice: z.number().int().min(0).optional(),
-  images: z
-    .array(
-      z.object({
-        imageUrl: z.string().url('Please provide a valid image URL'),
+export const productVariantSchema = z
+  .object({
+    productId: z
+      .string({ required_error: 'Product is required' })
+      .uuid('Invalid product'),
+    sku: z
+      .string({ required_error: 'SKU is required' })
+      .min(3, 'SKU must be at least 3 characters'),
+    quantity: z.coerce
+      .number({ required_error: 'Quantity is required' })
+      .int()
+      .min(0, 'Quantity must be a positive number'),
+    size: z.enum(PRODUCT_VARIANT_SIZES, {
+      required_error: 'Size is required',
+    }),
+    color: z.enum(PRODUCT_VARIANT_COLORS, {
+      required_error: 'Color is required',
+    }),
+    weight: z.coerce.number({
+      message: 'The weight is required and it must be a number',
+    }),
+    price: z.coerce
+      .number({
+        message: 'The price is required and it must be a number',
       })
-    )
-    .min(1, 'At least one image is required'),
-})
+      .transform((val) => val * 100),
+    salePrice: z.coerce
+      .number({
+        message: 'The sale price is required and it must be a number',
+      })
+      .transform((val) => val * 100),
+    // images: z
+    //   .array(
+    //     z.object({
+    //       imageUrl: z.string().url('Please provide a valid image URL'),
+    //     })
+    //   )
+    //   .min(1, 'At least one image is required'),
+  })
+  .superRefine((data, ctx) => {
+    if (data.price <= data.salePrice) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['salePrice'],
+        message: 'Sale price must be lower than price',
+      })
+    }
+  })
 
 export const updateProductSchema = productSchema.partial()
 
-export const updateProductVariantSchema = productVariantSchema.partial()
+export const updateProductVariantSchema = productVariantSchema
 
 export const publishProductSchema = z.object({
   id: z.string().uuid(),
