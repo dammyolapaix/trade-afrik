@@ -1,7 +1,11 @@
 import { cookies } from 'next/headers'
+import { forbidden, unauthorized } from 'next/navigation'
 
 import crypto from 'crypto'
 import { z } from 'zod'
+
+import { retrieveStore } from '@/features/stores/services'
+import { UserRole } from '@/features/users/types'
 
 import redis from '../redis'
 
@@ -47,4 +51,26 @@ export const createUserSession = async (
     secure: true,
     sameSite: 'lax',
   })
+}
+
+export const getAuthUser = async (role: UserRole) => {
+  const user = await getUserFromSession()
+
+  if (!user) return unauthorized()
+
+  if (role === 'seller') {
+    const authUserStore = await retrieveStore({ userId: user.id })
+
+    if (!authUserStore || !authUserStore.paystackSubAccountId)
+      return forbidden()
+
+    return {
+      store: authUserStore,
+      user,
+    }
+  }
+
+  return {
+    user,
+  }
 }
