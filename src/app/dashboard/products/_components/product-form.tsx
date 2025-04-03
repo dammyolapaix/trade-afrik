@@ -13,8 +13,13 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { createProductAction } from '@/features/products/actions'
+import { ListSubCategory } from '@/features/products/types'
 
-export default function ProductForm() {
+type ProductFormProps = {
+  subCategories: ListSubCategory
+}
+
+export default function ProductForm({ subCategories }: ProductFormProps) {
   const [state, formAction] = useActionState(createProductAction, {})
   return (
     <div className="container mx-auto">
@@ -37,6 +42,7 @@ export default function ProductForm() {
                 formElement="input"
                 inputType="text"
                 required
+                defaultValue={state?.form?.name}
                 errors={state?.errors?.name}
               />
               <CustomFormInput
@@ -45,13 +51,18 @@ export default function ProductForm() {
                 formElement="textarea"
                 inputType="text"
                 required
+                defaultValue={state?.form?.description}
                 errors={state?.errors?.description}
               />
               <CustomFormInput
-                name="subCategoryId"
-                label="Sub Category"
-                formElement="select"
-                selectItems={[]}
+                name="Category"
+                label="Category"
+                formElement="combobox"
+                items={subCategories.map((subCategory) => ({
+                  id: subCategory.id,
+                  name: `${subCategory.category.name} > ${subCategory.name}`,
+                }))}
+                query="subCategoryId"
                 required
                 errors={state?.errors?.subCategoryId}
               />

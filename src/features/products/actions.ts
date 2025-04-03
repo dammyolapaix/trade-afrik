@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 
 import { z } from 'zod'
 
-import { retrieveStore } from '@/features/stores/services'
 import { validatedActionWithUser } from '@/lib/auth/middlewares'
 import { DASHBOARD_PRODUCTS_ROUTE } from '@/lib/routes'
 
@@ -24,20 +23,12 @@ import {
 
 export const createProductAction = validatedActionWithUser(
   productSchema,
+  ['seller'],
   async (state: z.infer<typeof productSchema>, formData, authUser) => {
-    const store = await retrieveStore({ userId: authUser.id })
-
-    if (!store) {
-      return {
-        form: state,
-        error: 'You must have a store to create products',
-      }
-    }
-
     // Create the product
     const newProduct = await createProduct({
       ...state,
-      storeId: store.id,
+      storeId: authUser.storeId!,
       userId: authUser.id,
     })
 
@@ -54,6 +45,7 @@ export const createProductAction = validatedActionWithUser(
 
 export const updateProductAction = validatedActionWithUser(
   updateProductSchema,
+  ['seller'],
   async (state: z.infer<typeof updateProductSchema>, formData, authUser) => {
     const productId = formData.get('id') as string
 
@@ -98,6 +90,7 @@ export const updateProductAction = validatedActionWithUser(
 
 export const deleteProductAction = validatedActionWithUser(
   z.object({ id: z.string() }),
+  ['seller'],
   async (state: { id: string }, formData, authUser) => {
     const product = await retrieveProduct({ id: state.id })
 
@@ -130,6 +123,7 @@ export const deleteProductAction = validatedActionWithUser(
 
 export const publishProductAction = validatedActionWithUser(
   publishProductSchema,
+  ['seller'],
   async (state: z.infer<typeof publishProductSchema>, formData, authUser) => {
     const product = await retrieveProduct({ id: state.id })
 
@@ -162,6 +156,7 @@ export const publishProductAction = validatedActionWithUser(
 
 export const unpublishProductAction = validatedActionWithUser(
   publishProductSchema,
+  ['seller'],
   async (state: z.infer<typeof publishProductSchema>, formData, authUser) => {
     const product = await retrieveProduct({ id: state.id })
 
