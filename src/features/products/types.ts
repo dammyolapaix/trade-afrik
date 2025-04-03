@@ -6,6 +6,7 @@ import {
   products,
   subCategories,
 } from './schema'
+import { ListSubCategory } from './services'
 
 export type Product = typeof products.$inferSelect
 export type InsertProduct = typeof products.$inferInsert
@@ -39,3 +40,5 @@ export type ProductWithDetails = Product & {
     category: Category
   })[]
 }
+
+export type ListSubCategory = Awaited<ReturnType<typeof ListSubCategory>>

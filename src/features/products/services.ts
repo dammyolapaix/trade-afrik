@@ -175,3 +175,6 @@ export const unpublishProduct = async (id: string) => {
 
   return unpublishedProduct
 }
+
+export const ListSubCategory = async () =>
+  await db.query.subCategories.findMany({ with: { category: true } })
