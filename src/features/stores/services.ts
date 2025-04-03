@@ -5,7 +5,7 @@ import { eq, or } from 'drizzle-orm'
 import { db } from '@/db'
 import { stores } from '@/db/schema'
 
-import { InsertStore, RetrieveStore, Store } from './types'
+import { InsertStore, RetrieveStoreQuery, Store } from './types'
 
 export const createStore = async (store: InsertStore) => {
   const [newStore] = await db.insert(stores).values(store).returning()
@@ -13,7 +13,7 @@ export const createStore = async (store: InsertStore) => {
   return newStore
 }
 
-export const retrieveStore = async (query: RetrieveStore) =>
+export const retrieveStore = async (query: RetrieveStoreQuery) =>
   await db.query.stores.findFirst({
     where: or(
       query.id ? eq(stores.id, query.id) : undefined,
