@@ -7,6 +7,10 @@ const jiti = createJiti(fileURLToPath(import.meta.url))
 jiti('./src/env/server.ts')
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  experimental: {
+    authInterrupts: true,
+  },
+}
 
 export default nextConfig
