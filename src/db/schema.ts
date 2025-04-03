@@ -13,11 +13,13 @@ export {
 
 export {
   categories,
+  categoriesRelations,
   products,
   productSubCategories,
   productVariantImages,
   productVariants,
   subCategories,
+  subCategoriesRelationships,
 } from '@/features/products/schema'
 
 export { default as stores } from '@/features/stores/schema'

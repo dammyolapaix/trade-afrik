@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import {
   integer,
   pgTable,
@@ -86,4 +87,22 @@ export const productSubCategories = pgTable(
       pk: primaryKey({ columns: [table.productId, table.subCategoryId] }),
     }
   }
+)
+
+/**
+ * Relationships
+ */
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  stacks: many(subCategories),
+}))
+
+export const subCategoriesRelationships = relations(
+  subCategories,
+  ({ one }) => ({
+    category: one(categories, {
+      fields: [subCategories.categoryId],
+      references: [categories.id],
+    }),
+  })
 )
