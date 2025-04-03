@@ -201,26 +201,35 @@ function InputField(props: CustomFormFieldProps) {
 
     case 'select':
       return (
-        <Select
-          name={name}
-          required={required}
-          value={props.isQuery ? selectValue : props.selectValue}
-          onValueChange={
-            props.isQuery ? onSelectValueChange : props.selectOnValueChange
-          }
-          disabled={disabled}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder={placeholder} />
-          </SelectTrigger>
-          <SelectContent>
-            {props.selectItems.map((item) => (
-              <SelectItem value={item} key={item}>
-                {item}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <>
+          <Select
+            name={name}
+            required={required}
+            value={props.isQuery ? selectValue : props.selectValue}
+            onValueChange={
+              props.isQuery ? onSelectValueChange : props.selectOnValueChange
+            }
+            disabled={disabled}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {props.selectItems.map((item) => (
+                <SelectItem value={item} key={item}>
+                  {item}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Input
+            type="text"
+            name={name}
+            defaultValue={selectValue}
+            className="hidden"
+          />
+        </>
       )
 
     case 'combobox':
