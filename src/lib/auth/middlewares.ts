@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
+import { UserRole } from '@/features/users/types'
 import { SessionUser } from '@/types'
 
-import { UNAUTHENTICATED_ERROR_MESSAGE } from '../constants'
 import { getFormData } from '../utils'
-import { getUserFromSession } from './sessions'
+import { getAuthUser } from './sessions'
 
 type FormState<State> = {
   errors?: {
@@ -23,7 +23,7 @@ type ValidatedActionFunction<State> = (
 type ValidatedActionWithUserFunction<State> = (
   state: State,
   formData: FormData,
-  user: SessionUser
+  user: SessionUser & { storeId?: string }
 ) => Promise<FormState<State>>
 
 type ValidatedActionControlledFunction<State> = (
@@ -83,15 +83,14 @@ export function validatedActionControlled<
 // For uncontrolled forms with user (FormData)
 export function validatedActionWithUser<Schema extends z.ZodType<State>, State>(
   schema: Schema,
+  roles: UserRole[],
   action: ValidatedActionWithUserFunction<State>
 ) {
   return async (
     prevState: FormState<State>,
     formData: FormData
   ): Promise<FormState<State>> => {
-    const authUser = await getUserFromSession()
-
-    if (!authUser) throw new Error(UNAUTHENTICATED_ERROR_MESSAGE)
+    const authUserData = await getAuthUser(roles)
 
     const form = getFormData(formData) as State
 
@@ -105,7 +104,7 @@ export function validatedActionWithUser<Schema extends z.ZodType<State>, State>(
       }
     }
 
-    return action(result.data, formData, authUser)
+    return action(result.data, formData, authUserData)
   }
 }
 
@@ -113,11 +112,13 @@ export function validatedActionWithUser<Schema extends z.ZodType<State>, State>(
 export function validatedActionControlledWithUser<
   Schema extends z.ZodType<State>,
   State,
->(schema: Schema, action: ValidatedActionControlledWithUserFunction<State>) {
+>(
+  schema: Schema,
+  roles: UserRole[],
+  action: ValidatedActionControlledWithUserFunction<State>
+) {
   return async (state: State): Promise<FormState<State>> => {
-    const authUser = await getUserFromSession()
-
-    if (!authUser) throw new Error(UNAUTHENTICATED_ERROR_MESSAGE)
+    const authUserData = await getAuthUser(roles)
 
     const result = schema.safeParse(state)
 
@@ -129,6 +130,6 @@ export function validatedActionControlledWithUser<
       }
     }
 
-    return action(result.data, authUser)
+    return action(result.data, authUserData)
   }
 }

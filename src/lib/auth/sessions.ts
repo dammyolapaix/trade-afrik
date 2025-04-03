@@ -53,24 +53,21 @@ export const createUserSession = async (
   })
 }
 
-export const getAuthUser = async (role: UserRole) => {
-  const user = await getUserFromSession()
+export const getAuthUser = async (roles: UserRole[]) => {
+  const authUser = await getUserFromSession()
 
-  if (!user) return unauthorized()
+  if (!authUser) return unauthorized()
 
-  if (role === 'seller') {
-    const authUserStore = await retrieveStore({ userId: user.id })
+  if (roles.includes('seller')) {
+    const store = await retrieveStore({ userId: authUser.id })
 
-    if (!authUserStore || !authUserStore.paystackSubAccountId)
-      return forbidden()
+    if (!store || !store.paystackSubAccountId) return forbidden()
 
     return {
-      store: authUserStore,
-      user,
+      ...authUser,
+      storeId: store.id,
     }
   }
 
-  return {
-    user,
-  }
+  return authUser
 }
