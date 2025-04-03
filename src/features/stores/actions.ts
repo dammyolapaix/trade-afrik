@@ -14,6 +14,7 @@ import { createSubAccountSchema, storeSchema } from './validations'
 
 export const createStoreAction = validatedActionWithUser(
   storeSchema,
+  [],
   async (state: z.infer<typeof storeSchema>, formData, authUser) => {
     const authUserStore = await retrieveStore({ userId: authUser.id })
 
@@ -42,6 +43,7 @@ export const createStoreAction = validatedActionWithUser(
 
 export const createSubAccountAction = validatedActionWithUser(
   createSubAccountSchema,
+  [],
   async (state: z.infer<typeof createSubAccountSchema>, formData, authUser) => {
     const authUserStore = await retrieveStore({ userId: authUser.id })
 
