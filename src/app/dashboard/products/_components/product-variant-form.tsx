@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 
 import { toast } from 'sonner'
 
@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { FileUpload } from '@/components/ui/file-upload'
 import { createProductVariantAction } from '@/features/products/actions'
 import { PRODUCT_VARIANT_COLORS, PRODUCT_VARIANT_SIZES } from '@/lib/constants'
 
@@ -23,6 +24,20 @@ type Props = {
 
 export default function ProductVariantForm({ productId }: Props) {
   const [state, formAction] = useActionState(createProductVariantAction, {})
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+
+  const handleFileChange = (files: File[]) => {
+    setSelectedFiles(files)
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    selectedFiles.forEach((file) => formData.append('images[]', file))
+
+    console.log(formData)
+    formAction(formData)
+  }
 
   if (state.success) {
     toast.success(state.success)
@@ -41,7 +56,9 @@ export default function ProductVariantForm({ productId }: Props) {
           {state.error && (
             <SuccessErrorMessage message={state.error} messageType="error" />
           )}
-          <form action={formAction}>
+          <form onSubmit={handleSubmit}>
+            <FileUpload onChange={handleFileChange} />
+
             <div className="grid gap-4">
               <input
                 type="text"

@@ -2,8 +2,10 @@
 
 import { redirect } from 'next/navigation'
 
+import crypto from 'crypto'
 import { z } from 'zod'
 
+import { env } from '@/env/server'
 import { validatedActionWithUser } from '@/lib/auth/middlewares'
 import { DASHBOARD_PRODUCTS_ROUTE } from '@/lib/routes'
 import s3 from '@/lib/s3'
@@ -196,10 +198,14 @@ export const createProductVariantAction = validatedActionWithUser(
   async (state: z.infer<typeof productVariantSchema>) => {
     const images: string[] = []
 
-    for (const image of state.images) {
+    for (const image of state['images[]']) {
       const buffer = await image.arrayBuffer()
+
+      // Generate a unique filename using node crypo random
+      const uniqueFilename = `${crypto.randomBytes(16).toString('hex')}-${image.name}`
+
       const s3Response = await s3.put({
-        Key: image.name,
+        Key: uniqueFilename,
         Body: buffer,
         ContentType: image.type,
       })
@@ -211,7 +217,8 @@ export const createProductVariantAction = validatedActionWithUser(
         }
       }
 
-      const imageUrl = `${image.name}`
+      // Generate the s3 url using the bucket name and the unique filename
+      const imageUrl = `${env.AWS_BUCKET_NAME}.s3.${env.AWS_BUCKET_REGION}.amazonaws.com/${uniqueFilename}`
 
       images.push(imageUrl)
     }

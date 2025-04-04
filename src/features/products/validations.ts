@@ -1,3 +1,4 @@
+import { File } from 'buffer'
 import { z } from 'zod'
 
 import { PRODUCT_VARIANT_COLORS, PRODUCT_VARIANT_SIZES } from '@/lib/constants'
@@ -43,7 +44,7 @@ export const productVariantSchema = z
         message: 'The sale price is required and it must be a number',
       })
       .transform((val) => val * 100),
-    images: z
+    'images[]': z
       .array(z.instanceof(File))
       .refine((files) => files.length > 0, {
         message: 'At least one image is required',
