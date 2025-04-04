@@ -18,12 +18,10 @@ export const getFormData = (formData: FormData) => {
       if (!filteredData[key]) {
         filteredData[key] = []
       }
-      // Push non-empty values to the array
-      if (typeof value === 'string' && value.trim() !== '') {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        filteredData[key].push(value)
-      }
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      filteredData[key].push(value)
     }
     // Include NextJs Form action payload
     else if (key.includes('$ACTION')) {
