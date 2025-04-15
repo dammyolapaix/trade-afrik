@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import { forbidden, unauthorized } from 'next/navigation'
+import { redirect, unauthorized } from 'next/navigation'
 
 import crypto from 'crypto'
 import { z } from 'zod'
@@ -8,6 +8,10 @@ import { retrieveStore } from '@/features/stores/services'
 import { UserRole } from '@/features/users/types'
 
 import redis from '../redis'
+import {
+  ONBOARDING_CREATE_STORE_ROUTE,
+  ONBOARDING_PAYMENT_ACCOUNT_ROUTE,
+} from '../routes'
 
 // Seven days in seconds
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7
@@ -61,7 +65,9 @@ export const getAuthUser = async (roles: UserRole[]) => {
   if (roles.includes('seller')) {
     const store = await retrieveStore({ userId: authUser.id })
 
-    if (!store || !store.paystackSubAccountId) return forbidden()
+    if (!store) redirect(ONBOARDING_CREATE_STORE_ROUTE)
+
+    if (!store.paystackSubAccountId) redirect(ONBOARDING_PAYMENT_ACCOUNT_ROUTE)
 
     return {
       ...authUser,
