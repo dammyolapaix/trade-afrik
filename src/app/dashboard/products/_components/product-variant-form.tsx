@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useState, useTransition } from 'react'
 
 import { toast } from 'sonner'
 
@@ -24,6 +24,7 @@ type Props = {
 
 export default function ProductVariantForm({ productId }: Props) {
   const [state, formAction] = useActionState(createProductVariantAction, {})
+  const [isPending, startTransition] = useTransition()
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
   const handleFileChange = (files: File[]) => {
@@ -32,11 +33,13 @@ export default function ProductVariantForm({ productId }: Props) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
     const formData = new FormData(event.currentTarget)
     selectedFiles.forEach((file) => formData.append('images[]', file))
 
-    console.log(formData)
-    formAction(formData)
+    startTransition(() => {
+      formAction(formData)
+    })
   }
 
   if (state.success) {
@@ -132,7 +135,11 @@ export default function ProductVariantForm({ productId }: Props) {
               />
             </div>
 
-            <SubmitButton cta="Create Product Variant" className="my-5" />
+            <SubmitButton
+              cta="Create Product Variant"
+              className="my-5"
+              disabled={isPending}
+            />
           </form>
         </CardContent>
       </Card>
