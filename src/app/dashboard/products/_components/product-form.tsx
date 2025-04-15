@@ -12,15 +12,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { FileUpload } from '@/components/ui/file-upload'
 import { createProductAction } from '@/features/products/actions'
-import { ListSubCategory } from '@/features/products/types'
+import { Category } from '@/features/products/types'
 
 type ProductFormProps = {
-  subCategories: ListSubCategory
+  categories: Category[]
 }
 
-export default function ProductForm({ subCategories }: ProductFormProps) {
+export default function ProductForm({ categories }: ProductFormProps) {
   const [state, formAction] = useActionState(createProductAction, {})
+
   return (
     <div className="container mx-auto">
       <Card>
@@ -36,6 +38,8 @@ export default function ProductForm({ subCategories }: ProductFormProps) {
           )}
           <form action={formAction}>
             <div className="grid gap-4">
+              <FileUpload name="image[]" />
+
               <CustomFormInput
                 name="name"
                 label="Name"
@@ -58,13 +62,43 @@ export default function ProductForm({ subCategories }: ProductFormProps) {
                 name="Category"
                 label="Category"
                 formElement="combobox"
-                items={subCategories.map((subCategory) => ({
-                  id: subCategory.id,
-                  name: `${subCategory.category.name} > ${subCategory.name}`,
+                items={categories.map(({ id, name }) => ({
+                  id,
+                  name,
                 }))}
-                query="subCategoryId"
+                query="categoryId"
                 required
-                errors={state?.errors?.subCategoryId}
+                errors={state?.errors?.categoryId}
+              />
+
+              <CustomFormInput
+                name="quantity"
+                label="Quantity"
+                formElement="input"
+                inputType="number"
+                required
+                defaultValue={state?.form?.quantity}
+                errors={state?.errors?.quantity}
+              />
+
+              <CustomFormInput
+                name="price"
+                label="Price"
+                formElement="input"
+                inputType="text"
+                defaultValue={state?.form?.price}
+                errors={state?.errors?.price}
+                required
+              />
+
+              <CustomFormInput
+                name="salePrice"
+                label="Sale Price"
+                formElement="input"
+                inputType="text"
+                defaultValue={state?.form?.salePrice}
+                errors={state?.errors?.salePrice}
+                required
               />
             </div>
 

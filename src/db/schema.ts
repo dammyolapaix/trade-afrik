@@ -1,9 +1,4 @@
-export {
-  oAuthProviderEnum,
-  productVariantColorEnum,
-  productVariantSizeEnum,
-  userRoleEnum,
-} from '@/db/enums'
+export { oAuthProviderEnum, userRoleEnum } from '@/db/enums'
 
 export {
   profiles,
@@ -11,15 +6,6 @@ export {
   default as users,
 } from '@/features/users/schema'
 
-export {
-  categories,
-  categoriesRelations,
-  products,
-  productSubCategories,
-  productVariantImages,
-  productVariants,
-  subCategories,
-  subCategoriesRelationships,
-} from '@/features/products/schema'
+export { categories, products } from '@/features/products/schema'
 
 export { default as stores } from '@/features/stores/schema'

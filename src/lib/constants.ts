@@ -7,18 +7,3 @@ export const UNAUTHENTICATED_ERROR_MESSAGE =
 
 export const INTERNAL_ERROR_MESSAGE =
   'Something went wrong from our end, please try again later. Report the issue if it persists' as const
-
-export const PRODUCT_VARIANT_SIZES = ['S', 'M', 'L', 'XL', 'XXL'] as const
-
-export const PRODUCT_VARIANT_COLORS = [
-  'Red',
-  'Blue',
-  'Green',
-  'Yellow',
-  'Orange',
-  'Purple',
-  'Pink',
-  'Brown',
-  'Black',
-  'White',
-] as const

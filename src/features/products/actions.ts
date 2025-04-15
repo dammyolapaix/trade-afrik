@@ -1,7 +1,8 @@
 'use server'
 
-import { redirect } from 'next/navigation'
+import { forbidden, redirect } from 'next/navigation'
 
+import { File } from 'buffer'
 import crypto from 'crypto'
 import { z } from 'zod'
 
@@ -12,29 +13,59 @@ import s3 from '@/lib/s3'
 
 import {
   createProduct,
-  createProductVariant,
   deleteProduct,
   publishProduct,
   retrieveProduct,
   unpublishProduct,
   updateProduct,
 } from './services'
+import { Product } from './types'
 import {
   productSchema,
-  productVariantSchema,
   publishProductSchema,
   updateProductSchema,
 } from './validations'
+
+const uploadImage = async (image: File) => {
+  const buffer = await image.arrayBuffer()
+
+  // Generate a unique filename using node crypo random
+  const uniqueFilename = `${crypto.randomBytes(16).toString('hex')}-${image.name}`
+
+  const s3Response = await s3.put({
+    Key: uniqueFilename,
+    Body: buffer,
+    ContentType: image.type,
+  })
+
+  if (!s3Response) {
+    return null
+  }
+
+  // Generate the s3 url using the bucket name and the unique filename
+  const imageUrl = `https://${env.AWS_BUCKET_NAME}.s3.${env.AWS_BUCKET_REGION}.amazonaws.com/${uniqueFilename}`
+
+  return imageUrl
+}
 
 export const createProductAction = validatedActionWithUser(
   productSchema,
   ['seller'],
   async (state: z.infer<typeof productSchema>, formData, authUser) => {
+    const image = await uploadImage(state['image[]'][0])
+
+    if (!image) {
+      return {
+        form: state,
+        error: 'Failed to upload image',
+      }
+    }
+
     // Create the product
     const newProduct = await createProduct({
       ...state,
+      image,
       storeId: authUser.storeId!,
-      userId: authUser.id,
     })
 
     if (!newProduct) {
@@ -52,35 +83,33 @@ export const updateProductAction = validatedActionWithUser(
   updateProductSchema,
   ['seller'],
   async (state: z.infer<typeof updateProductSchema>, formData, authUser) => {
-    const productId = formData.get('id') as string
-
-    if (!productId) {
-      return {
-        form: state,
-        error: 'Product ID is required',
-      }
-    }
-
-    const product = await retrieveProduct({ id: productId })
-
-    if (!product) {
-      return {
-        form: state,
-        error: 'Product not found',
-      }
-    }
-
-    if (product.userId !== authUser.id) {
-      return {
-        form: state,
-        error: 'You do not have permission to update this product',
-      }
-    }
-
-    const updatedProduct = await updateProduct(productId, {
-      name: state.name,
-      description: state.description,
+    const product = await retrieveProduct({
+      id: state.id,
+      storeId: authUser.storeId!,
     })
+
+    if (!product || product.storeId !== authUser.storeId) forbidden()
+
+    const { 'image[]': image, ...productInfo } = state
+
+    const productData: Partial<Product> = {
+      ...productInfo,
+    }
+
+    if (image) {
+      const imageUrl = await uploadImage(image[0])
+
+      if (!imageUrl) {
+        return {
+          form: state,
+          error: 'Failed to upload image',
+        }
+      }
+
+      productData.image = imageUrl
+    }
+
+    const updatedProduct = await updateProduct(product.id, productData)
 
     if (!updatedProduct) {
       return {
@@ -97,21 +126,12 @@ export const deleteProductAction = validatedActionWithUser(
   z.object({ id: z.string() }),
   ['seller'],
   async (state: { id: string }, formData, authUser) => {
-    const product = await retrieveProduct({ id: state.id })
+    const product = await retrieveProduct({
+      id: state.id,
+      storeId: authUser.storeId!,
+    })
 
-    if (!product) {
-      return {
-        form: state,
-        error: 'Product not found',
-      }
-    }
-
-    if (product.userId !== authUser.id) {
-      return {
-        form: state,
-        error: 'You do not have permission to delete this product',
-      }
-    }
+    if (!product || product.storeId !== authUser.storeId) forbidden()
 
     const deletedProduct = await deleteProduct(state.id)
 
@@ -130,21 +150,12 @@ export const publishProductAction = validatedActionWithUser(
   publishProductSchema,
   ['seller'],
   async (state: z.infer<typeof publishProductSchema>, formData, authUser) => {
-    const product = await retrieveProduct({ id: state.id })
+    const product = await retrieveProduct({
+      id: state.id,
+      storeId: authUser.storeId!,
+    })
 
-    if (!product) {
-      return {
-        form: state,
-        error: 'Product not found',
-      }
-    }
-
-    if (product.userId !== authUser.id) {
-      return {
-        form: state,
-        error: 'You do not have permission to publish this product',
-      }
-    }
+    if (!product || product.storeId !== authUser.storeId) forbidden()
 
     const publishedProduct = await publishProduct(state.id)
 
@@ -163,21 +174,12 @@ export const unpublishProductAction = validatedActionWithUser(
   publishProductSchema,
   ['seller'],
   async (state: z.infer<typeof publishProductSchema>, formData, authUser) => {
-    const product = await retrieveProduct({ id: state.id })
+    const product = await retrieveProduct({
+      id: state.id,
+      storeId: authUser.storeId!,
+    })
 
-    if (!product) {
-      return {
-        form: state,
-        error: 'Product not found',
-      }
-    }
-
-    if (product.userId !== authUser.id) {
-      return {
-        form: state,
-        error: 'You do not have permission to unpublish this product',
-      }
-    }
+    if (!product || product.storeId !== authUser.storeId) forbidden()
 
     const unpublishedProduct = await unpublishProduct(state.id)
 
@@ -189,49 +191,5 @@ export const unpublishProductAction = validatedActionWithUser(
     }
 
     redirect(DASHBOARD_PRODUCTS_ROUTE)
-  }
-)
-
-export const createProductVariantAction = validatedActionWithUser(
-  productVariantSchema,
-  ['seller'],
-  async (state: z.infer<typeof productVariantSchema>) => {
-    const images: string[] = []
-
-    for (const image of state['images[]']) {
-      const buffer = await image.arrayBuffer()
-
-      // Generate a unique filename using node crypo random
-      const uniqueFilename = `${crypto.randomBytes(16).toString('hex')}-${image.name}`
-
-      const s3Response = await s3.put({
-        Key: uniqueFilename,
-        Body: buffer,
-        ContentType: image.type,
-      })
-
-      if (!s3Response) {
-        return {
-          form: state,
-          error: 'Failed to upload image',
-        }
-      }
-
-      // Generate the s3 url using the bucket name and the unique filename
-      const imageUrl = `${env.AWS_BUCKET_NAME}.s3.${env.AWS_BUCKET_REGION}.amazonaws.com/${uniqueFilename}`
-
-      images.push(imageUrl)
-    }
-
-    const productVariant = await createProductVariant({ ...state, images })
-
-    if (!productVariant) {
-      return {
-        form: state,
-        error: 'Failed to create product variant',
-      }
-    }
-
-    return { success: 'Product variant created successfully' }
   }
 )

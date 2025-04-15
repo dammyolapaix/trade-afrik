@@ -54,7 +54,7 @@ export const retrieveOrCreateOAuthUser = async ({
   return await db.transaction(async (tx) => {
     let user = await tx.query.users.findFirst({
       where: eq(users.email, email),
-      columns: { id: true },
+      columns: { id: true, role: true },
     })
 
     if (user == null) {
@@ -66,7 +66,7 @@ export const retrieveOrCreateOAuthUser = async ({
           email: email,
           role,
         })
-        .returning({ id: users.id })
+        .returning({ id: users.id, role: users.role })
 
       user = newUser
 
