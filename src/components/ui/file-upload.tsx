@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-import { useRef, useState } from 'react'
+import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
 
 import { IconUpload } from '@tabler/icons-react'
 import { motion } from 'motion/react'
@@ -28,18 +28,17 @@ const secondaryVariant = {
   },
 }
 
-export const FileUpload = ({
-  onChange,
-}: {
-  onChange?: (files: File[]) => void
-}) => {
-  const [files, setFiles] = useState<File[]>([])
-  const fileInputRef = useRef<HTMLInputElement>(null)
+type FileWithPreview = File & {
+  preview: string
+}
 
-  const handleFileChange = (newFiles: File[]) => {
-    setFiles((prevFiles) => [...prevFiles, ...newFiles])
-    onChange && onChange(newFiles)
-  }
+type Props = {
+  name: string
+}
+
+export const FileUpload = ({ name }: Props) => {
+  const [files, setFiles] = useState<FileWithPreview[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleClick = () => {
     fileInputRef.current?.click()
@@ -48,11 +47,35 @@ export const FileUpload = ({
   const { getRootProps, isDragActive } = useDropzone({
     multiple: true,
     noClick: true,
-    onDrop: handleFileChange,
+    onDrop: (incomingFiles) => {
+      console.log('incomingFiles', incomingFiles)
+      if (fileInputRef.current) {
+        // Note the specific way we need to munge the file into the hidden input
+        // https://stackoverflow.com/a/68182158/1068446
+        const dataTransfer = new DataTransfer()
+        incomingFiles.forEach((v) => {
+          dataTransfer.items.add(v)
+        })
+        fileInputRef.current.files = dataTransfer.files
+
+        setFiles(
+          incomingFiles.map((file) =>
+            Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            })
+          )
+        )
+      }
+    },
     onDropRejected: (error) => {
       console.log(error)
     },
   })
+
+  useEffect(() => {
+    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
+    return () => files.forEach((file) => URL.revokeObjectURL(file.preview))
+  }, [files])
 
   return (
     <div className="w-full" {...getRootProps()}>
@@ -65,8 +88,7 @@ export const FileUpload = ({
           ref={fileInputRef}
           id="file-upload-handle"
           type="file"
-          multiple
-          onChange={(e) => handleFileChange(Array.from(e.target.files || []))}
+          name={name}
           className="hidden"
         />
         <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
@@ -86,7 +108,7 @@ export const FileUpload = ({
                   key={'file' + idx}
                   layoutId={idx === 0 ? 'file-upload' : 'file-upload-' + idx}
                   className={cn(
-                    'relative z-40 mx-auto mt-4 flex w-full flex-col items-start justify-start overflow-hidden rounded-md bg-white p-4 md:h-24 dark:bg-neutral-900',
+                    'relative z-40 mx-auto mt-4 flex w-full flex-col items-start justify-start overflow-hidden rounded-md bg-white p-4 md:h-60 dark:bg-neutral-900',
                     'shadow-sm'
                   )}
                 >
@@ -127,6 +149,18 @@ export const FileUpload = ({
                       modified{' '}
                       {new Date(file.lastModified).toLocaleDateString()}
                     </motion.p>
+                  </div>
+                  <div className="mt-2">
+                    <Image
+                      src={file.preview}
+                      alt=""
+                      width={100}
+                      height={100}
+                      // Revoke data uri after image is loaded
+                      onLoad={() => {
+                        URL.revokeObjectURL(file.preview)
+                      }}
+                    />
                   </div>
                 </motion.div>
               ))}
