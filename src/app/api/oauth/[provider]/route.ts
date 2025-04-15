@@ -51,6 +51,8 @@ export async function GET(request: NextRequest, { params }: Params) {
 
   const oAuthClient = getOAuthClient(validatedData.provider)
 
+  let redirectUrl: string = HOME_ROUTE
+
   try {
     const oAuthUser = await oAuthClient.fetchUser(code, state)
 
@@ -59,7 +61,13 @@ export async function GET(request: NextRequest, { params }: Params) {
       ...validatedData,
     })
 
-    await createUserSession(user)
+    if (user.role === 'seller' && stateData.authType === 'register')
+      redirectUrl = ONBOARDING_CREATE_STORE_ROUTE
+
+    if (user.role === 'seller' && stateData.authType === 'login')
+      redirectUrl = DASHBOARD_ROUTE
+
+    await createUserSession({ id: user.id })
   } catch (error) {
     console.error(error)
     redirect(
@@ -67,16 +75,6 @@ export async function GET(request: NextRequest, { params }: Params) {
         'Failed to connect. Please try again.'
       )}`
     )
-  }
-
-  let redirectUrl: string = HOME_ROUTE
-
-  if (stateData.authType === 'register' && stateData.role === 'seller') {
-    redirectUrl = ONBOARDING_CREATE_STORE_ROUTE
-  } else if (stateData.authType === 'login' && stateData.role === 'seller') {
-    redirectUrl = DASHBOARD_ROUTE
-  } else {
-    redirectUrl = HOME_ROUTE
   }
 
   redirect(redirectUrl)
