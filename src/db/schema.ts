@@ -6,6 +6,11 @@ export {
   default as users,
 } from '@/features/users/schema'
 
-export { categories, products } from '@/features/products/schema'
+export {
+  categories,
+  categoryRelations,
+  productRelations,
+  products,
+} from '@/features/products/schema'
 
 export { default as stores } from '@/features/stores/schema'
