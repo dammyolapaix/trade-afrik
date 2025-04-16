@@ -13,7 +13,7 @@ import {
   IconFolder,
   IconHelp,
   IconInnerShadowTop,
-  IconListDetails,
+  IconPackage,
   IconReport,
   IconSearch,
   IconSettings,
@@ -33,7 +33,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { DASHBOARD_ROUTE } from '@/lib/routes'
+import { DASHBOARD_PRODUCTS_ROUTE, DASHBOARD_ROUTE } from '@/lib/routes'
 
 const data = {
   user: {
@@ -48,9 +48,9 @@ const data = {
       icon: IconDashboard,
     },
     {
-      title: 'Lifecycle',
-      url: '#',
-      icon: IconListDetails,
+      title: 'Products',
+      url: DASHBOARD_PRODUCTS_ROUTE,
+      icon: IconPackage,
     },
     {
       title: 'Analytics',

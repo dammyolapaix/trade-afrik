@@ -1,10 +1,12 @@
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { DataTable } from '@/components/data-table'
 import { SectionCards } from '@/components/section-cards'
+import { getAuthUser } from '@/lib/auth/sessions'
 
 import data from './data.json'
 
-export default function Page() {
+export default async function Page() {
+  await getAuthUser(['seller'])
   return (
     <>
       <SectionCards />

@@ -4,7 +4,7 @@ import { and, eq } from 'drizzle-orm'
 
 import db from '@/db'
 import { profiles, userOAuthAccounts, users } from '@/db/schema'
-import { INTERNAL_ERROR_MESSAGE } from '@/lib/constants'
+import { INTERNAL_SERVER_ERROR } from '@/lib/constants'
 
 import { InsertUser, RetrieveOrCreateOAuthUser, RetrieveUser } from './types'
 
@@ -23,7 +23,7 @@ export const registerUser = async (userInfo: InsertUser) => {
       })
       .returning({ id: profiles.id })
 
-    if (!user || !profile) throw new Error(INTERNAL_ERROR_MESSAGE)
+    if (!user || !profile) throw new Error(INTERNAL_SERVER_ERROR)
 
     return user
   })
@@ -58,7 +58,7 @@ export const retrieveOrCreateOAuthUser = async ({
     })
 
     if (user == null) {
-      if (!role) throw new Error(INTERNAL_ERROR_MESSAGE)
+      if (!role) throw new Error(INTERNAL_SERVER_ERROR)
 
       const [newUser] = await tx
         .insert(users)
@@ -78,7 +78,7 @@ export const retrieveOrCreateOAuthUser = async ({
         })
         .returning({ id: profiles.id })
 
-      if (!user || !profile) throw new Error(INTERNAL_ERROR_MESSAGE)
+      if (!user || !profile) throw new Error(INTERNAL_SERVER_ERROR)
     }
 
     await tx

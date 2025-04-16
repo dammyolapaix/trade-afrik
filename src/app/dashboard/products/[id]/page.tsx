@@ -9,7 +9,7 @@ type Props = {
   params: Promise<{ id: string }>
 }
 
-export default async function EditProductPage({ params }: Props) {
+export default async function ProductPage({ params }: Props) {
   const [{ id }, authUser] = await Promise.all([
     params,
     getAuthUser(['seller']),
@@ -24,9 +24,7 @@ export default async function EditProductPage({ params }: Props) {
 
   return (
     <Suspense fallback={<>Loading...</>}>
-      <div className="container mx-auto mb-10 text-2xl font-bold">
-        {product.name}
-      </div>
+      <>{JSON.stringify(product)}</>
     </Suspense>
   )
 }
