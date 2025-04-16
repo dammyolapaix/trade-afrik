@@ -52,8 +52,13 @@ export const createUserSession = async (
   cookieStore.set(COOKIE_SESSION_KEY, sessionId, {
     expires: Date.now() + SESSION_EXPIRATION_SECONDS * 1000,
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
+    path: '/',
+    domain:
+      process.env.NODE_ENV === 'production'
+        ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+        : undefined,
   })
 }
 
