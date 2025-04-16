@@ -9,7 +9,7 @@ import { env } from '@/env/server'
 class S3 {
   private client = new S3Client({
     credentials: {
-      accessKeyId: env.AWS_ACCESS_KEY,
+      accessKeyId: env.AWS_ACCESS_KEY_ID,
       secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
     },
     region: env.AWS_BUCKET_REGION,
