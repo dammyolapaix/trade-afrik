@@ -1,6 +1,9 @@
 import { Suspense } from 'react'
 
-import { getUserFromSession } from '@/lib/auth/sessions'
+import { Skeleton } from '@/components/ui/skeleton'
+import { findStoreByDomain } from '@/features/stores/services'
+
+import Products from './_components/products'
 
 type Props = {
   params: Promise<{ domain: string }>
@@ -8,14 +11,17 @@ type Props = {
 
 export default async function StoreHomePage({ params }: Props) {
   const { domain } = await params
-  const user = await getUserFromSession()
+
+  const storeDomain = decodeURIComponent(domain).split('.')[0]
+
+  const store = await findStoreByDomain(storeDomain)
 
   return (
-    <Suspense fallback={<>Loading...</>}>
+    <Suspense fallback={<Skeleton />}>
       <div className="container mx-auto mb-10 text-2xl font-bold">
-        <div>{decodeURIComponent(domain)}</div>
+        <div>{store.name}</div>
 
-        <div>User ID: {user?.id}</div>
+        <Products storeId={store.id} />
       </div>
     </Suspense>
   )

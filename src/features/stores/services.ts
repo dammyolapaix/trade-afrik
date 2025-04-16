@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation'
+
 import 'server-only'
 
 import { eq, or } from 'drizzle-orm'
@@ -30,4 +32,12 @@ export const updateStore = async (id: string, store: Partial<Store>) => {
     .returning()
 
   return updatedStore
+}
+
+export const findStoreByDomain = async (domain: string) => {
+  const store = await retrieveStore({ slug: domain })
+
+  if (!store) notFound()
+
+  return store
 }
