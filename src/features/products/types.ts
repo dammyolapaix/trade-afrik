@@ -10,3 +10,7 @@ export type RetrieveProduct = {
   id?: string
   storeId?: string
 }
+
+export type ProductWithRelationships = Product & {
+  category: Category
+}

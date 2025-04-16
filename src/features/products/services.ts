@@ -1,9 +1,10 @@
 import 'server-only'
 
-import { and, eq } from 'drizzle-orm'
+import { and, eq, isNotNull } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { products } from '@/db/schema'
+import { INTERNAL_SERVER_ERROR } from '@/lib/constants'
 
 import { InsertProduct, Product, RetrieveProduct } from './types'
 
@@ -23,10 +24,21 @@ export const retrieveProduct = async (
   })
 }
 
-export const listProducts = async (storeId: string) => {
-  return await db.query.products.findMany({
-    where: eq(products.storeId, storeId),
+export const listProducts = async ({
+  storeId,
+  isPublished,
+}: Pick<Product, 'storeId'> & { isPublished?: boolean }) => {
+  const dbProducts = await db.query.products.findMany({
+    where: and(
+      eq(products.storeId, storeId),
+      isPublished === true ? isNotNull(products.publishedAt) : undefined
+    ),
+    with: { category: true },
   })
+
+  if (!dbProducts) throw new Error(INTERNAL_SERVER_ERROR)
+
+  return dbProducts
 }
 
 export const updateProduct = async (id: string, data: Partial<Product>) => {
