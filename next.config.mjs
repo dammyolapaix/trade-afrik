@@ -11,6 +11,14 @@ const nextConfig = {
   experimental: {
     authInterrupts: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: process.env.REMOTE_IMAGE_HOST,
+      },
+    ],
+  },
 }
 
 export default nextConfig
