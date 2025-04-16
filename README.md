@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TradeAfrik
 
-## Getting Started
+TradeAfrik is a B2B eCommerce marketplace allowing African businesses to connect with international buyers. The platform empowers African sellers to showcase and sell indigenous products globally, creating opportunities for cross-border trade and business growth.
 
-First, run the development server:
+## 🌟 Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+TradeAfrik provides a comprehensive solution that bridges the gap between African sellers and international buyers. The platform is designed to make global trade accessible, secure, and profitable for African businesses.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Key Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### For Sellers
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Revenue Sharing Model**
 
-## Learn More
+  - Keep 80% of your revenue
+  - Platform handles marketing, shipping, and fulfillment
+  - Comprehensive business support services
 
-To learn more about Next.js, take a look at the following resources:
+- **Pro Seller Plan**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  - Priority store visibility
+  - Enhanced product listings
+  - Increased discovery by potential buyers
+  - Premium placement in search results
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Powerful Seller Dashboard**
+  - Real-time sales analytics
+  - Performance tracking
+  - Conversion rate optimization
+  - Business insights and reporting
 
-## Deploy on Vercel
+### Marketplace Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Product Management**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+  - Easy product listing and management
+  - Bulk upload capabilities
+  - Category and tag organization
+
+- **Order Processing**
+
+  - Streamlined order management
+  - Automated order tracking
+  - Fulfillment status updates
+
+- **Communication Tools**
+
+  - Built-in messaging system
+  - Buyer-seller interaction platform
+  - Quote request management
+
+- **Secure Payments**
+  - Multiple payment options
+  - Secure transaction processing
+  - International payment support
