@@ -40,7 +40,7 @@ export default async function Products({ storeId }: Props) {
   return (
     <div className="container mx-auto px-4 py-8">
       <Suspense fallback={<ProductsSkeleton />}>
-        <ProductsGrid products={products} />
+        <ProductsGrid products={products as ProductWithRelationships[]} />
       </Suspense>
     </div>
   )
