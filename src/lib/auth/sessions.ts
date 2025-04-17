@@ -61,6 +61,8 @@ export const getAuthUser = async (roles: UserRole[]) => {
 
   if (!authUser) return unauthorized()
 
+  if (!roles.includes(authUser.role)) return unauthorized()
+
   if (roles.includes('seller')) {
     const store = await retrieveStore({ userId: authUser.id })
 
