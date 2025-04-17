@@ -2,10 +2,10 @@ import { cookies } from 'next/headers'
 import { redirect, unauthorized } from 'next/navigation'
 
 import crypto from 'crypto'
-import { z } from 'zod'
 
 import { retrieveStore } from '@/features/stores/services'
 import { UserRole } from '@/features/users/types'
+import { SessionUser, sessionSchema } from '@/types'
 
 import redis from '../redis'
 import {
@@ -16,10 +16,6 @@ import {
 // Seven days in seconds
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7
 const COOKIE_SESSION_KEY = 'session' as const
-
-const sessionSchema = z.object({
-  id: z.string(),
-})
 
 export const getUserFromSession = async () => {
   const cookieStore = await cookies()
@@ -38,9 +34,7 @@ export const getUserSessionById = async (sessionId: string) => {
   return success ? user : null
 }
 
-export const createUserSession = async (
-  user: z.infer<typeof sessionSchema>
-) => {
+export const createUserSession = async (user: SessionUser) => {
   const sessionId = crypto.randomBytes(512).toString('hex').normalize()
 
   await redis.set(`session:${sessionId}`, sessionSchema.parse(user), {

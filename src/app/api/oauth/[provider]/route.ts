@@ -67,7 +67,7 @@ export async function GET(request: NextRequest, { params }: Params) {
     if (user.role === 'seller' && stateData.authType === 'login')
       redirectUrl = DASHBOARD_ROUTE
 
-    await createUserSession({ id: user.id })
+    await createUserSession(user)
   } catch (error) {
     console.error(error)
     redirect(

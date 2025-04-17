@@ -44,6 +44,8 @@ export const loginAction = validatedAction(
     if (foundUser)
       await createUserSession({
         id: foundUser.id,
+        email: foundUser.email,
+        role: foundUser.role,
       })
 
     redirect('/')
