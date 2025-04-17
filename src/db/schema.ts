@@ -14,3 +14,10 @@ export {
 } from '@/features/products/schema'
 
 export { default as stores } from '@/features/stores/schema'
+
+export {
+  orderItemRelations,
+  orderItems,
+  orderRelations,
+  orders,
+} from '@/features/orders/schema'
