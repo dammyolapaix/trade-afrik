@@ -3,9 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { IconEye, IconHeart, IconShoppingCart } from '@tabler/icons-react'
-
-import { Button } from '@/components/ui/button'
+import { AddToCartButton } from '@/components/add-to-cart-button'
 import { ProductWithRelationships } from '@/features/products/types'
 
 type Props = {
@@ -15,7 +13,7 @@ type Props = {
 export function ProductCard({ product }: Props) {
   console.log('product', product)
 
-  const { name, image, category, price } = product
+  const { name, image, category, price, id, salePrice, quantity } = product
 
   return (
     <div className="flex flex-col rounded-lg bg-white p-4 shadow-sm transition-all hover:shadow-md">
@@ -54,15 +52,16 @@ export function ProductCard({ product }: Props) {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" className="flex-1">
-            <IconShoppingCart className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon">
-            <IconHeart className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon">
-            <IconEye className="h-4 w-4" />
-          </Button>
+          <AddToCartButton
+            product={{
+              id,
+              name,
+              price,
+              salePrice,
+              image,
+              quantity,
+            }}
+          />
         </div>
       </div>
     </div>

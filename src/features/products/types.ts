@@ -14,3 +14,8 @@ export type RetrieveProduct = {
 export type ProductWithRelationships = Product & {
   category: Category
 }
+
+export type CartProduct = Pick<
+  Product,
+  'id' | 'name' | 'price' | 'salePrice' | 'image' | 'quantity'
+>
