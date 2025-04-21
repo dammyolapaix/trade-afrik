@@ -17,6 +17,13 @@ const nextConfig = {
         protocol: 'https',
         hostname: process.env.REMOTE_IMAGE_HOST,
       },
+      {
+        protocol: process.env.NODE_ENV === 'development' ? 'http' : 'https',
+        hostname:
+          process.env.NODE_ENV === 'development'
+            ? 'localhost'
+            : process.env.NEXT_PUBLIC_ROOT_DOMAIN,
+      },
     ],
   },
 }

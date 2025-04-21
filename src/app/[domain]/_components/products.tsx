@@ -10,19 +10,9 @@ type Props = {
   storeId: string
 }
 
-function ProductsGrid({ products }: { products: ProductWithRelationships[] }) {
-  return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
-    </div>
-  )
-}
-
 function ProductsSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {[...Array(6)].map((_, i) => (
         <div key={i} className="flex flex-col space-y-4">
           <Skeleton className="h-[300px] w-full rounded-lg" />
@@ -35,12 +25,18 @@ function ProductsSkeleton() {
 }
 
 export default async function Products({ storeId }: Props) {
-  const products = await listProducts({ storeId })
+  const products = (await listProducts({
+    storeId,
+  })) as ProductWithRelationships[]
 
   return (
     <div className="container mx-auto px-4 py-8">
       <Suspense fallback={<ProductsSkeleton />}>
-        <ProductsGrid products={products as ProductWithRelationships[]} />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
       </Suspense>
     </div>
   )

@@ -2,8 +2,9 @@ import { Suspense } from 'react'
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { findStoreByDomain } from '@/features/stores/services'
+import { getSubDomainName } from '@/lib/utils'
 
-import Products from './_components/products'
+import SellerInfo from './_components/seller-info'
 
 type Props = {
   params: Promise<{ domain: string }>
@@ -12,17 +13,13 @@ type Props = {
 export default async function StoreHomePage({ params }: Props) {
   const { domain } = await params
 
-  const storeDomain = decodeURIComponent(domain).split('.')[0]
+  const storeDomain = getSubDomainName(domain)
 
   const store = await findStoreByDomain(storeDomain)
 
   return (
     <Suspense fallback={<Skeleton />}>
-      <div className="container mx-auto mb-10 text-2xl font-bold">
-        <div>{store.name}</div>
-
-        <Products storeId={store.id} />
-      </div>
+      <SellerInfo storeId={store.id} />
     </Suspense>
   )
 }

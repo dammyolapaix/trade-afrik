@@ -16,8 +16,13 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
 
   if (!isInCart) {
     return (
-      <Button onClick={() => addToCart(1)}>
-        <IconShoppingCart className="h-4 w-4" /> Add to Cart
+      <Button
+        onClick={() => addToCart(1)}
+        disabled={product.quantity === 0}
+        className="w-full"
+      >
+        <IconShoppingCart className="h-4 w-4" />{' '}
+        {product.quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
       </Button>
     )
   }
@@ -39,7 +44,12 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
       >
         +
       </Button>
-      <Button variant="destructive" size="sm" onClick={removeFromCart}>
+      <Button
+        variant="destructive"
+        size="sm"
+        className="w-full"
+        onClick={removeFromCart}
+      >
         <IconTrash className="h-4 w-4" /> Remove
       </Button>
     </div>

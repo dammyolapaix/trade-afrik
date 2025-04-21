@@ -1,9 +1,12 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+
+import { Heart, Star } from 'lucide-react'
 
 import { AddToCartButton } from '@/components/add-to-cart-button'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { ProductWithRelationships } from '@/features/products/types'
 
 type Props = {
@@ -11,59 +14,54 @@ type Props = {
 }
 
 export function ProductCard({ product }: Props) {
-  console.log('product', product)
-
   const { name, image, category, price, id, salePrice, quantity } = product
 
+  const rating = 4.9
+  const reviewCount = 124
+
   return (
-    <div className="flex flex-col rounded-lg bg-white p-4 shadow-sm transition-all hover:shadow-md">
-      {/* Category Name */}
-      <div className="mb-2">
-        <Link
-          href="#"
-          className="text-sm font-medium text-blue-600 hover:text-blue-800"
-        >
-          {category.name}
-        </Link>
-      </div>
-
-      {/* Product Image */}
-      <div className="relative mb-4 aspect-square w-full overflow-hidden rounded-lg">
+    <Card key={product.id} className="overflow-hidden">
+      <div className="relative aspect-square">
         <Image
-          src={image}
-          alt={''}
-          width={100}
-          height={100}
-          className="h-full w-full object-contain"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          src={product.image}
+          alt={product.name}
+          fill
+          className="object-cover transition-transform hover:scale-105"
         />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="bg-background/80 absolute top-2 right-2 h-8 w-8 rounded-full backdrop-blur-sm"
+        >
+          <Heart className="h-4 w-4" />
+          <span className="sr-only">Add to wishlist</span>
+        </Button>
       </div>
-
-      {/* Product Info */}
-      <div className="flex flex-1 flex-col">
-        <h3 className="mb-2 text-lg font-semibold text-gray-900">{name}</h3>
-
-        {/* Price */}
-        <div className="mb-4">
-          <span className="text-xl font-bold text-blue-600">
-            ${price.toFixed(2)}
-          </span>
+      <CardContent className="p-4">
+        <div className="text-muted-foreground mb-1 text-sm">
+          {category.name}
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2">
-          <AddToCartButton
-            product={{
-              id,
-              name,
-              price,
-              salePrice,
-              image,
-              quantity,
-            }}
-          />
+        <h3 className="line-clamp-2 font-medium">{name}</h3>
+        <div className="mt-2 flex items-center justify-between">
+          <span className="font-bold">${price.toFixed(2)}</span>
+          <div className="flex items-center text-sm">
+            <Star className="fill-primary text-primary mr-1 h-3 w-3" />
+            {rating} ({reviewCount})
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+      <CardFooter className="p-4 pt-0">
+        <AddToCartButton
+          product={{
+            id,
+            name,
+            price,
+            salePrice,
+            image,
+            quantity,
+          }}
+        />
+      </CardFooter>
+    </Card>
   )
 }
